@@ -405,6 +405,10 @@ wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
     * for the full set of master styles used by the documentation samples
     */
     ```
+    
+### Step 10. Build and run
+
+1. Press ***F5*** in Visual Studio, a browser tab should open with *My First Angular 2 App* displayed
 
 ## Resources
 

@@ -30,18 +30,18 @@ var paths = {
 };
 
 gulp.task('moveToLibs', function () {
-    gulp.src(paths.libs).pipe(gulp.dest('./wwwroot/libs'));
-    gulp.src(paths.libs).pipe(gulp.dest('./wwwroot/libs'));
-    gulp.src('node_modules/rxjs/**/*.js').pipe(gulp.dest('./wwwroot/libs/rxjs'));
+    gulp.src(paths.libs).pipe(gulp.dest('./wwwroot/libs/js'));
+    gulp.src(paths.css).pipe(gulp.dest('./wwwroot/libs/css'));
+    gulp.src('node_modules/rxjs/**/*.js').pipe(gulp.dest('./wwwroot/libs/js/rxjs'));
 
     for (var i = 0; i < paths.packages.length; i++) {
-        gulp.src('node_modules/' + paths.packages[i] + '/*.js').pipe(gulp.dest('./wwwroot/libs/' + paths.packages[i]));
-        gulp.src('node_modules/' + paths.packages[i] + '/src/**/*.js').pipe(gulp.dest('./wwwroot/libs/' + paths.packages[i] + '/src/'));
+        gulp.src('node_modules/' + paths.packages[i] + '/*.js').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i]));
+        gulp.src('node_modules/' + paths.packages[i] + '/src/**/*.js').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i] + '/src/'));
     }
 });
 
 gulp.task('moveToApp', function () {
-    gulp.src(paths.app).pipe(gulp.dest('wwwroot/app'))
+    gulp.src(paths.app).pipe(gulp.dest('wwwroot/app'));
 });
 
 

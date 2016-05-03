@@ -121,7 +121,7 @@ Follow the instructions in the follow blog - [Customize external web tools in vi
             "lite-server": "^2.2.0",
             "typescript": "^1.8.10",
             "typings":"^0.8.1",
-            "gulp": "^3.9.1"",
+            "gulp": "^3.9.1",
             "del": "^2.2.0",
             "gulp-dest": "^0.2.3"
         }
@@ -140,6 +140,7 @@ wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
 1. Add a ***GULP Configuration File*** in the root project file and copy/paste the following:
 
         /// <binding AfterBuild='moveToLibs, moveToApp' Clean='clean' />
+
         var gulp = require('gulp');
         var del = require('del');
         var dest = require('gulp-dest');
@@ -170,23 +171,23 @@ wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
         };
 
         gulp.task('moveToLibs', function () {
-            gulp.src(paths.libs).pipe(gulp.dest('./wwwroot/libs'));
-            gulp.src(paths.libs).pipe(gulp.dest('./wwwroot/libs'));
-            gulp.src('node_modules/rxjs/**/*.js').pipe(gulp.dest('./wwwroot/libs/rxjs'));
+            gulp.src(paths.libs).pipe(gulp.dest('./wwwroot/libs/js'));
+            gulp.src(paths.css).pipe(gulp.dest('./wwwroot/libs/css'));
+            gulp.src('node_modules/rxjs/**/*.js').pipe(gulp.dest('./wwwroot/libs/js/rxjs'));
 
             for (var i = 0; i < paths.packages.length; i++) {
-                gulp.src('node_modules/' + paths.packages[i] + '/*.js').pipe(gulp.dest('./wwwroot/libs/' + paths.packages[i]));
-                gulp.src('node_modules/' + paths.packages[i] + '/src/**/*.js').pipe(gulp.dest('./wwwroot/libs/' + paths.packages[i] + '/src/'));
+                gulp.src('node_modules/' + paths.packages[i] + '/*.js').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i]));
+                gulp.src('node_modules/' + paths.packages[i] + '/src/**/*.js').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i] + '/src/'));
             }
         });
 
         gulp.task('moveToApp', function () {
-            gulp.src(paths.app).pipe(gulp.dest('wwwroot/app'))
+            gulp.src(paths.app).pipe(gulp.dest('wwwroot/app'));
         });
 
         // clean all the generated typescript files
         gulp.task('clean', function () {
-            return del(['wwwroot/app/**/*','wwwroot/libs/**/*']);
+            return del(['wwwroot/app/**/*', 'wwwroot/libs/**/*']);
         });
 
 ### Step 5. Our first Angular Component
@@ -249,16 +250,14 @@ wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
             <title>Angular 2 QuickStart</title>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-
             <link rel="stylesheet" href="libs/css/styles.css">
-            <link rel="stylesheet" href="libs/css/bootstrap.css">
 
             <!-- 1. Load libraries -->
             <!-- Polyfill(s) for older browsers -->
-            <script src="libs/es6-shim.min.js"></script>
-            <script src="libs/zone.js"></script>
-            <script src="libs/Reflect.js"></script>
-            <script src="libs/system.src.js"></script>
+            <script src="libs/js/es6-shim.min.js"></script>
+            <script src="libs/js/zone.js"></script>
+            <script src="libs/js/Reflect.js"></script>
+            <script src="libs/js/system.src.js"></script>
 
             <!-- 2. Configure SystemJS -->
             <script src="systemjs.config.js"></script>
@@ -332,28 +331,28 @@ wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
         // map tells the System loader where to look for things
         var map = {
             'app':                        'app', // 'dist',
-            'rxjs':                       'libs/rxjs',
-            'angular2-in-memory-web-api': 'libs/angular2-in-memory-web-api',
-            '@angular':                   'libs/@angular'
+            'rxjs':                       'libs/js/rxjs',
+            'angular2-in-memory-web-api': 'libs/js/angular2-in-memory-web-api',
+            '@angular':                   'libs/js/@angular'
             };
 
             // packages tells the System loader how to load when no filename and/or no extension
         var packages = {
             'app':                        { main: 'main.js',  defaultExtension: 'js' },
             'rxjs':                       { defaultExtension: 'js' },
-            'angular2-in-memory-web-api': { defaultExtension: 'js' },
+            'angular2-in-memory-web-api': { defaultExtension: 'js' }
             };
 
         var packageNames = [
-            '@angular/common',
-            '@angular/compiler',
-            '@angular/core',
-            '@angular/http',
-            '@angular/platform-browser',
-            '@angular/platform-browser-dynamic',
-            '@angular/router',
-            '@angular/testing',
-            '@angular/upgrade',
+            'libs/js/@angular/common',
+            'libs/js/@angular/compiler',
+            'libs/js/@angular/core',
+            'libs/js/@angular/http',
+            'libs/js/@angular/platform-browser',
+            'libs/js/@angular/platform-browser-dynamic',
+            'libs/js/@angular/router',
+            'libs/js/@angular/testing',
+            'libs/js/@angular/upgrade'
             ];
 
             // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
@@ -405,7 +404,7 @@ wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
     * for the full set of master styles used by the documentation samples
     */
     ```
-    
+
 ### Step 10. Build and run
 
 1. Press ***F5*** in Visual Studio, a browser tab should open with *My First Angular 2 App* displayed

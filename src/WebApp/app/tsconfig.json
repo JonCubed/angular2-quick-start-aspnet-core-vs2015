@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "system",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": false,
+        "noImplicitAny": false,
+        "outDir": "../wwwroot/app"
+    },
+    "compileOnSave": true,
+    "files": [
+        "./app.component.ts",
+        "./main.ts",
+        "../typings/main.d.ts"
+    ],
+    "exclude": [
+        "../node_modules",
+        "../typings/main"
+    ]
+}
+

@@ -1,6 +1,4 @@
-# Introduction
-
-Angular 2 (rc0) 5 Minute QuickStart with ASP.NET 5 in Visual Studio 2015.
+# Angular 2 (rc0) 5 Minute QuickStart with ASP.NET 5 in Visual Studio 2015
 
 This repository aims to setup angular2 using the [5 Min QuickStart Guide](https://angular.io/docs/ts/latest/quickstart.html) using ASP.NET 5 in Visual Studio 2015.
 

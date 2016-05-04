@@ -13,7 +13,7 @@ var paths = {
         'node_modules/reflect-metadata/Reflect.js*',
         'node_modules/systemjs/dist/system.src.js*'
     ],
-    packages: [
+    angular: [
         '@angular/common',
         '@angular/compiler',
         '@angular/core',
@@ -22,7 +22,7 @@ var paths = {
         '@angular/platform-browser-dynamic',
         '@angular/router',
         '@angular/testing',
-        '@angular/upgrade'
+        '@angular/upgrade',
     ],
     css: [
         'node_modules/bootstrap/dist/css/bootstrap.css',
@@ -31,13 +31,19 @@ var paths = {
 };
 
 gulp.task('moveToLibs', function () {
-    gulp.src(paths.libs).pipe(gulp.dest('./wwwroot/libs/js'));
-    gulp.src(paths.css).pipe(gulp.dest('./wwwroot/libs/css'));
-    gulp.src('node_modules/rxjs/**/*.js*').pipe(gulp.dest('./wwwroot/libs/js/rxjs'));
+    var nodeModulePath = 'node_modules/';
+    var baseDest = './wwwroot/libs';
+    var vendorDest = baseDest + '/vendor/';
+    gulp.src(paths.libs).pipe(gulp.dest(vendorDest));
+    gulp.src(paths.css).pipe(gulp.dest(baseDest + '/css'));
+    gulp.src(nodeModulePath + 'rxjs/**/*.js*').pipe(gulp.dest(vendorDest + 'rxjs'));
 
-    for (var i = 0; i < paths.packages.length; i++) {
-        gulp.src('node_modules/' + paths.packages[i] + '/*.js*').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i]));
-        gulp.src('node_modules/' + paths.packages[i] + '/src/**/*.js*').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i] + '/src/'));
+    for (var i = 0; i < paths.angular.length; i++) {
+        var basePath = nodeModulePath + paths.angular[i];
+        gulp.src(basePath + '/*.js*').pipe(gulp.dest(vendorDest + paths.angular[i]));
+        gulp.src(basePath + '/*.css').pipe(gulp.dest(vendorDest + paths.angular[i]));
+        gulp.src(basePath + '/src/**/*.js*').pipe(gulp.dest(vendorDest + paths.angular[i] + '/src/'));
+        gulp.src(basePath + '/src/**/*.css').pipe(gulp.dest(vendorDest + paths.angular[i] + '/src/'));
     }
 });
 

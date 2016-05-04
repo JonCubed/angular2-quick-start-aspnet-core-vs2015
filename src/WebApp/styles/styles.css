@@ -17,6 +17,15 @@ body, input[text], button {
     font-family: Cambria, Georgia;
 }
 
+md-card {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+md-card-title {
+    color: #369;
+    font-size: 250%;
+}
+
 /*
 * See https://github.com/angular/angular.io/blob/master/public/docs/_examples/styles.css
 * for the full set of master styles used by the documentation samples

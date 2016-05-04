@@ -24,6 +24,10 @@ var paths = {
         '@angular/testing',
         '@angular/upgrade',
     ],
+    angularMaterial: [
+        '@angular2-material/core',
+        '@angular2-material/card'
+    ],
     css: [
         'node_modules/bootstrap/dist/css/bootstrap.css',
         'styles/styles.css'
@@ -44,6 +48,17 @@ gulp.task('moveToLibs', function () {
         gulp.src(basePath + '/*.css').pipe(gulp.dest(vendorDest + paths.angular[i]));
         gulp.src(basePath + '/src/**/*.js*').pipe(gulp.dest(vendorDest + paths.angular[i] + '/src/'));
         gulp.src(basePath + '/src/**/*.css').pipe(gulp.dest(vendorDest + paths.angular[i] + '/src/'));
+    }
+
+    for (var i = 0; i < paths.angularMaterial.length; i++) {
+        var basePath = nodeModulePath + paths.angularMaterial[i];
+        gulp.src([
+            basePath + '/**/*.js*',
+            basePath + '/**/*.css',
+            basePath + '/**/*.html',
+            '!' + basePath + '/**/*.json',
+            '!' + basePath + '/**/*.spec.js*'
+        ]).pipe(gulp.dest(vendorDest + paths.angularMaterial[i]));
     }
 });
 

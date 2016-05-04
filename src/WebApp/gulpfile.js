@@ -7,10 +7,11 @@ var dest = require('gulp-dest');
 var paths = {
     app: ['app/**/*.ts'],
     libs: [
-        'node_modules/es6-shim/es6-shim.min.js*',
-        'node_modules/zone.js/dist/zone.js',
-        'node_modules/reflect-metadata/Reflect.js',
-        'node_modules/systemjs/dist/system.src.js'
+        'node_modules/es6-shim/es6-shim.min.js',
+        'node_modules/es6-shim/es6-shim.map',
+        'node_modules/zone.js/dist/zone.js*',
+        'node_modules/reflect-metadata/Reflect.js*',
+        'node_modules/systemjs/dist/system.src.js*'
     ],
     packages: [
         '@angular/common',
@@ -32,18 +33,17 @@ var paths = {
 gulp.task('moveToLibs', function () {
     gulp.src(paths.libs).pipe(gulp.dest('./wwwroot/libs/js'));
     gulp.src(paths.css).pipe(gulp.dest('./wwwroot/libs/css'));
-    gulp.src('node_modules/rxjs/**/*.js').pipe(gulp.dest('./wwwroot/libs/js/rxjs'));
+    gulp.src('node_modules/rxjs/**/*.js*').pipe(gulp.dest('./wwwroot/libs/js/rxjs'));
 
     for (var i = 0; i < paths.packages.length; i++) {
-        gulp.src('node_modules/' + paths.packages[i] + '/*.js').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i]));
-        gulp.src('node_modules/' + paths.packages[i] + '/src/**/*.js').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i] + '/src/'));
+        gulp.src('node_modules/' + paths.packages[i] + '/*.js*').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i]));
+        gulp.src('node_modules/' + paths.packages[i] + '/src/**/*.js*').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i] + '/src/'));
     }
 });
 
 gulp.task('moveToApp', function () {
     gulp.src(paths.app).pipe(gulp.dest('wwwroot/app'));
 });
-
 
 // clean all the generated typescript files
 gulp.task('clean', function () {

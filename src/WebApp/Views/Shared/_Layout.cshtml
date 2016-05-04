@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>@ViewBag.Title</title>
+
+    @RenderSection("Styles", required: false)
+
+    @RenderSection("HeadScripts", required: false)
+</head>
+
+@await FlushAsync()
+
+<body>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

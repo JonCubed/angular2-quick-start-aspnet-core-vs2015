@@ -15,7 +15,7 @@ I'm using:
     * NPM 3.8.8
     * Gulp 3.9.1
 
-Visual Studio 2015 includes its own version of external tools, unfortunately these tools have not been updated causing errors with some required packages. 
+Visual Studio 2015 includes its own version of external tools, unfortunately these tools have not been updated causing errors with some required packages.
 To fix this we are going to force Visual Studio to use our global installs of node and npm.
 Follow the instructions in the follow blog - [Customize external web tools in visual studio 2015](https://blogs.msdn.microsoft.com/webdev/2015/03/19/customize-external-web-tools-in-visual-studio-2015/).
 
@@ -30,6 +30,8 @@ Follow the instructions in the follow blog - [Customize external web tools in vi
     ```
 
 ## 5 Min QuickStart
+
+Have a look at the [5 Min QuickStart Guide](https://angular.io/docs/ts/latest/quickstart.html) before continuing to have a better understanding of we are doing here.
 
 ### Step 1. Create an empty ASP.NET Core project
 
@@ -133,7 +135,7 @@ Follow the instructions in the follow blog - [Customize external web tools in vi
 
 ### Step 4. Setting up GULP
 
-When all the packages are downloaded they are placed in the *node_modules* folder in the root. 
+When all the packages are downloaded they are placed in the *node_modules* folder in the root.
 However in ASP.NET 5, *wwwroot* is our public web folder that means any static files outside of it
 wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
 
@@ -148,10 +150,11 @@ wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
         var paths = {
             app: ['app/**/*.ts'],
             libs: [
-                'node_modules/es6-shim/es6-shim.min.js*',
-                'node_modules/zone.js/dist/zone.js',
-                'node_modules/reflect-metadata/Reflect.js',
-                'node_modules/systemjs/dist/system.src.js'
+                'node_modules/es6-shim/es6-shim.min.js',
+                'node_modules/es6-shim/es6-shim.map',
+                'node_modules/zone.js/dist/zone.js*',
+                'node_modules/reflect-metadata/Reflect.js*',
+                'node_modules/systemjs/dist/system.src.js*'
             ],
             packages: [
                 '@angular/common',
@@ -173,11 +176,11 @@ wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
         gulp.task('moveToLibs', function () {
             gulp.src(paths.libs).pipe(gulp.dest('./wwwroot/libs/js'));
             gulp.src(paths.css).pipe(gulp.dest('./wwwroot/libs/css'));
-            gulp.src('node_modules/rxjs/**/*.js').pipe(gulp.dest('./wwwroot/libs/js/rxjs'));
+            gulp.src('node_modules/rxjs/**/*.js*').pipe(gulp.dest('./wwwroot/libs/js/rxjs'));
 
             for (var i = 0; i < paths.packages.length; i++) {
-                gulp.src('node_modules/' + paths.packages[i] + '/*.js').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i]));
-                gulp.src('node_modules/' + paths.packages[i] + '/src/**/*.js').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i] + '/src/'));
+                gulp.src('node_modules/' + paths.packages[i] + '/*.js*').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i]));
+                gulp.src('node_modules/' + paths.packages[i] + '/src/**/*.js*').pipe(gulp.dest('./wwwroot/libs/js/' + paths.packages[i] + '/src/'));
             }
         });
 
@@ -408,6 +411,198 @@ wont be servered. We'll use GULP to copy them to *wwwroot/libs*.
 ### Step 10. Build and run
 
 1. Press ***F5*** in Visual Studio, a browser tab should open with *My First Angular 2 App* displayed
+
+## Taking advantage of ASP.NET
+
+So far we have a pretty static solution and are not taking advantage of ASP.NET 5 so lets make some changes.
+
+### Step 1. Add Mvc
+
+1. Update ***dependencies*** property in *project.json*, copy/paste the following:
+
+    ```json
+    "dependencies": {
+        "Microsoft.AspNet.IISPlatformHandler": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
+        "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
+        "Microsoft.Extensions.Configuration.FileProviderExtensions": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-rc1-final",
+        "Microsoft.AspNet.Tooling.Razor": "1.0.0-rc1-final",
+        "Microsoft.Extensions.CodeGenerators.Mvc": "1.0.0-rc1-final"
+    }
+    ```
+
+1. Add a ***Controllers*** folder in the root project folder
+
+1. Add a ***MVC Controller Class*** called ***HomeController*** in *controllers* folder
+
+1. Add a ***Views*** folder in the root project folder
+
+1. Add a ***MVC View Start Page*** called ***_ViewStart.cshtml*** in *views* folder
+
+1. Add a ***MVC View Imports Page*** called ***_ViewImports.cshtml*** in *views* folder
+
+1. Update ***Views/_ViewImports.cshtml***, copy/paste the following:
+
+    ```razor
+    @using WebApp
+    @addTagHelper "*, Microsoft.AspNet.Mvc.TagHelpers"
+    ```
+
+1. Add a ***Shared*** folder to the *views* folder
+
+1. Add a ***MVC View Layout Page*** called ***_Layout.cshtml*** to *views/shared* folder
+
+1. Add a ***Home*** folder to the *views* folder
+
+1. Add a ***MVC View Page*** called ***Index.cshtml*** to the *views/home* folder
+
+1. Add a ***config*** folder to the root project folder
+
+1. Add a ***ASP.NET Configuration File*** called ***appsettings.json*** to the *config* folder
+
+1. Replace ***appsettings.json***, copy/paste the following:
+
+    ```json
+    {
+        "Logging": {
+            "IncludeScopes": false,
+            "LogLevel": {
+                "Default": "Verbose",
+                "System": "Information",
+                "Microsoft": "Information"
+            }
+        }
+    }
+    ```
+
+1. Replace ***Startup.cs***, copy/paste the following:
+
+    ```csharp
+    using Microsoft.AspNet.Builder;
+    using Microsoft.AspNet.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+
+    namespace WebApp
+    {
+        public class Startup
+        {
+            public Startup( IHostingEnvironment env )
+            {
+                // Set up configuration sources.
+                var builder = new ConfigurationBuilder()
+                    .AddJsonFile("config/appsettings.json")
+                    .AddJsonFile($"config/appsettings.{env.EnvironmentName}.json", optional: true);
+
+                builder.AddEnvironmentVariables();
+                Configuration = builder.Build()
+                                    .ReloadOnChanged("config/appsettings.json")
+                                    .ReloadOnChanged($"config/appsettings.{env.EnvironmentName}.json");
+            }
+
+            public IConfigurationRoot Configuration { get; set; }
+
+            // This method gets called by the runtime. Use this method to add services to the container.
+            // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
+            public void ConfigureServices(IServiceCollection services)
+            {
+                services.AddMvc();
+            }
+
+            // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory )
+            {
+                loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+                loggerFactory.AddDebug();
+
+                app.UseIISPlatformHandler();
+
+                app.UseStaticFiles();
+
+                app.UseMvc(routes =>
+                {
+                    routes.MapRoute("default",
+                                    "{controller=Home}/{action=Index}/{id?}");
+
+                    routes.MapRoute("spa-fallback",
+                                    "{*anything}",
+                                    new { controller = "Home", action = "Index" });
+                });
+            }
+
+            // Entry point for the application.
+            public static void Main(string[] args) => WebApplication.Run<Startup>(args);
+        }
+    }
+
+    ```
+
+### Step 2. Move to Dynamic View
+
+1. Replace ***_Layout.cshtml*** in *Views/Shared* folder. Copy/paste the following:
+
+    ```razor
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width"/>
+        <title>@ViewBag.Title</title>
+
+        @RenderSection("Styles", required: false)
+
+        @RenderSection("HeadScripts", required: false)
+    </head>
+
+    @await FlushAsync()
+
+    <body>
+        <div>
+            @RenderBody()
+        </div>
+    </body>
+    </html>
+    ```
+
+1. Replace ***Index.cshtml*** in *Views/Home* folder. Copy/paste the following:
+
+    ```razor
+    @{
+        ViewBag.Title = "Angular 2 QuickStart";
+    }
+
+    @section Styles {
+        <link rel="stylesheet" href="libs/css/styles.css">
+    }
+
+    @section HeadScripts
+    {
+        <!-- 1. Load libraries -->
+        <!-- Polyfill(s) for older browsers -->
+        <script src="libs/js/es6-shim.min.js"></script>
+        <script src="libs/js/zone.js"></script>
+        <script src="libs/js/Reflect.js"></script>
+        <script src="libs/js/system.src.js"></script>
+
+        <!-- 2. Configure SystemJS -->
+        <script src="systemjs.config.js"></script>
+        <script>
+                System.import('app').catch(function (err) { console.error(err); });
+        </script>
+    }
+
+    <cache vary-by="@Context.Request.Path">
+        <my-app>Loading...</my-app>
+    </cache>
+    ```
+1. Delete ***Index.html*** in *wwwroot*
 
 ## Resources
 
